@@ -1,10 +1,19 @@
+import time
+
 import pandas as pd
 
-from config import *
+from config import (
+    TEMPORADAS,
+    BASE_URL,
+    HEADERS,
+    INTERVALO
+)
+
 from scraper import obter_html
 from parser import extrair_jogadores
 from database import salvar_csv
 from database import salvar_sqlite
+
 
 def main():
 
@@ -12,26 +21,50 @@ def main():
 
     for temporada in TEMPORADAS:
 
-        html = obter_html(...)
+        print(f"Coletando temporada {temporada}")
 
-        registros.extend(
-            extrair_jogadores(
-                html,
-                temporada
-            )
+        url = BASE_URL.format(
+            temporada=temporada
         )
+
+        html = obter_html(
+            url,
+            HEADERS
+        )
+
+        jogadores = extrair_jogadores(
+            html,
+            temporada,
+            url
+        )
+
+        registros.extend(jogadores)
+
+        print(
+            f"{len(jogadores)} registros encontrados"
+        )
+
+        time.sleep(INTERVALO)
+
+    if not registros:
+
+        print("Nenhum registro coletado.")
+        return
 
     df = pd.DataFrame(registros)
 
-    salvar_csv(
-        df,
-        "data/serie_a_estatisticas.csv"
-    )
+    print("\nResumo:")
+    print(df.info())
 
-    salvar_sqlite(
-        df,
-        "data/serie_a.db"
-    )
+    print("\nPrimeiras linhas:")
+    print(df.head())
+
+    salvar_csv(df)
+
+    salvar_sqlite(df)
+
+    print("\nColeta finalizada com sucesso.")
+
 
 if __name__ == "__main__":
     main()
