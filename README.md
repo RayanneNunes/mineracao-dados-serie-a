@@ -11,7 +11,7 @@ Os dados coletados serão utilizados nas etapas de ETL, pré-processamento e min
 ## Estrutura do Projeto
 
 ```text
-mineracao_dados/
+mineracao-dados-serie-a/
 │
 ├── data/
 │   ├── serie_a.db
