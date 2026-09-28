@@ -1,20 +1,25 @@
 import sqlite3
+from pathlib import Path
 
-def salvar_sqlite(df, arquivo):
-    conexao = sqlite3.connect(arquivo)
+DB_PATH = "data/serie_a.db"
+CSV_PATH = "data/serie_a_estatisticas.csv"
 
-    df.to_sql(
-        "jogadores",
-        conexao,
-        if_exists="replace",
-        index=False
-    )
+def salvar_sqlite(df):
+    Path("data").mkdir(exist_ok=True)
 
-    conexao.close()
+    with sqlite3.connect(DB_PATH) as conexao:
+        df.to_sql(
+            "jogadores",
+            conexao,
+            if_exists="replace",
+            index=False
+        )
 
-def salvar_csv(df, arquivo):
+def salvar_csv(df):
+    Path("data").mkdir(exist_ok=True)
+
     df.to_csv(
-        arquivo,
+        CSV_PATH,
         index=False,
         encoding="utf-8-sig"
     )
