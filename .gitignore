@@ -1,0 +1,10 @@
+venv/
+venv_312/
+
+__pycache__/
+*.pyc
+
+data/*.db
+
+.vscode/
+.idea/
