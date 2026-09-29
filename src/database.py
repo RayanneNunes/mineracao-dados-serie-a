@@ -8,14 +8,14 @@ DATA_DIR = BASE_DIR / "data"
 DB_PATH = DATA_DIR / "serie_a.db"
 
 
-def salvar_dataset_final(df):
+def salvar_dataset_final_limpo(df):
 
     DATA_DIR.mkdir(exist_ok=True)
 
     with sqlite3.connect(DB_PATH) as conexao:
 
         df.to_sql(
-            "dataset_final",
+            "dataset_final_limpo",
             conexao,
             if_exists="replace",
             index=False

@@ -40,29 +40,56 @@ def extrair_jogadores(
                 for td in colunas
             ]
 
+            # =====================================
             # Clube
+            # =====================================
+
             clube = ""
 
             clube_img = colunas[5].find("img")
 
             if clube_img:
+
                 clube = (
                     clube_img.get("title")
                     or clube_img.get("alt")
                     or ""
                 )
 
+            else:
+
+                texto_clube = colunas[5].get_text(
+                    " ",
+                    strip=True,
+                )
+
+                if "club" in texto_clube.lower():
+
+                    clube = "MULTIPLOS_CLUBES"
+
+                else:
+
+                    clube = texto_clube
+
+            # =====================================
             # Nacionalidade
+            # =====================================
+
             nacionalidade = ""
 
             nacao_img = colunas[6].find("img")
 
             if nacao_img:
+
                 nacionalidade = (
                     nacao_img.get("title")
                     or nacao_img.get("alt")
                     or ""
                 )
+
+            # =====================================
+            # Registro
+            # =====================================
 
             registro = {
                 "jogador": dados[3],
@@ -77,7 +104,9 @@ def extrair_jogadores(
                 "url_origem": url,
             }
 
-            registros.append(registro)
+            registros.append(
+                registro
+            )
 
         except Exception as erro:
 
