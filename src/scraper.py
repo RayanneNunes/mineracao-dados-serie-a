@@ -2,12 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def obter_html(url, headers):
-
+def obter_html(url: str, headers: dict) -> str:
     response = requests.get(
         url,
         headers=headers,
-        timeout=30
+        timeout=30,
     )
 
     response.raise_for_status()
@@ -15,34 +14,42 @@ def obter_html(url, headers):
     return response.text
 
 
-def descobrir_paginas(url, headers):
+def descobrir_paginas(
+    url: str,
+    headers: dict,
+) -> int:
 
-    html = obter_html(url, headers)
+    html = obter_html(
+        url,
+        headers,
+    )
 
     soup = BeautifulSoup(
         html,
-        "html.parser"
+        "html.parser",
     )
 
     paginas = set()
 
-    for a in soup.find_all("a", href=True):
-
+    for a in soup.find_all(
+        "a",
+        href=True,
+    ):
         href = a["href"]
 
-        if "/page/" in href:
+        if "/page/" not in href:
+            continue
 
-            try:
+        try:
+            numero = int(
+                href.split("/page/")[1]
+                .split("?")[0]
+                .split("/")[0]
+            )
 
-                numero = int(
-                    href.split("/page/")[1]
-                )
+            paginas.add(numero)
 
-                paginas.add(numero)
+        except ValueError:
+            continue
 
-            except ValueError:
-                pass
-
-    total_paginas = max(paginas) if paginas else 1
-
-    return total_paginas
+    return max(paginas) if paginas else 1

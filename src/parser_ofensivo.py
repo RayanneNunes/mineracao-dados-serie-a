@@ -1,11 +1,20 @@
 from bs4 import BeautifulSoup
 
 
-def extrair_jogadores(html, temporada, url):
+def extrair_jogadores(
+    html,
+    temporada,
+    url,
+):
+    soup = BeautifulSoup(
+        html,
+        "html.parser",
+    )
 
-    soup = BeautifulSoup(html, "html.parser")
-
-    tabela = soup.find("table", class_="items")
+    tabela = soup.find(
+        "table",
+        class_="items",
+    )
 
     if tabela is None:
         return []
@@ -24,7 +33,10 @@ def extrair_jogadores(html, temporada, url):
         try:
 
             dados = [
-                td.get_text(" ", strip=True)
+                td.get_text(
+                    " ",
+                    strip=True,
+                )
                 for td in colunas
             ]
 
@@ -57,15 +69,12 @@ def extrair_jogadores(html, temporada, url):
                 "posicao": dados[4],
                 "clube": clube,
                 "nacionalidade": nacionalidade,
-                "jogos": dados[7],
-                "idade": dados[8],
-                "substituicoes_entrada": dados[9],
-                "substituicoes_saida": dados[10],
+                "partidas": dados[7],
                 "gols": dados[11],
                 "assistencias": dados[12],
                 "participacao_gols": dados[13],
                 "temporada": temporada,
-                "url_origem": url
+                "url_origem": url,
             }
 
             registros.append(registro)

@@ -1,25 +1,30 @@
 import time
+from pathlib import Path
 
 import pandas as pd
 
-from config import (
+from src.config import (
     TEMPORADAS,
     BASE_URL,
     HEADERS,
-    INTERVALO
+    INTERVALO,
 )
 
-from scraper import (
+from src.scraper import (
     obter_html,
-    descobrir_paginas
+    descobrir_paginas,
 )
 
-from parser import extrair_jogadores
-
-from database import (
-    salvar_csv,
-    salvar_sqlite
+from src.parser_ofensivo import (
+    extrair_jogadores,
 )
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_DIR = BASE_DIR / "data"
+
+CSV_PATH = DATA_DIR / "ofensivo.csv"
 
 
 def main():
@@ -27,10 +32,14 @@ def main():
     registros = []
 
     print("\n" + "=" * 80)
+    print("COLETA OFENSIVA")
+    print("=" * 80)
 
     for temporada in TEMPORADAS:
 
-        print(f"Coletando temporada {temporada}")
+        print(
+            f"\nColetando temporada {temporada}"
+        )
 
         url_base = BASE_URL.format(
             temporada=temporada
@@ -38,19 +47,18 @@ def main():
 
         total_paginas = descobrir_paginas(
             url_base,
-            HEADERS
+            HEADERS,
         )
 
         print(
-            f"Total de páginas: "
-            f"{total_paginas}"
+            f"Total de páginas: {total_paginas}"
         )
 
         total_registros_temporada = 0
 
         for pagina in range(
             1,
-            total_paginas + 1
+            total_paginas + 1,
         ):
 
             if pagina == 1:
@@ -60,22 +68,23 @@ def main():
             else:
 
                 url = (
-                    f"{url_base}"
-                    f"/page/{pagina}"
+                    f"{url_base}/page/{pagina}"
                 )
 
             html = obter_html(
                 url,
-                HEADERS
+                HEADERS,
             )
 
             jogadores = extrair_jogadores(
                 html,
                 temporada,
-                url
+                url,
             )
 
-            registros.extend(jogadores)
+            registros.extend(
+                jogadores
+            )
 
             total_registros_temporada += len(
                 jogadores
@@ -98,31 +107,43 @@ def main():
     if not registros:
 
         print(
-            "Nenhum registro coletado."
+            "\nNenhum registro coletado."
         )
 
         return
 
-    df = pd.DataFrame(registros)
+    df = pd.DataFrame(
+        registros
+    )
 
     print("\nResumo:")
 
-    print(df.info())
+    df.info()
 
     print("\nPrimeiras linhas:")
 
-    print(df.head())
+    print(
+        df.head()
+    )
+
+    DATA_DIR.mkdir(
+        exist_ok=True
+    )
 
     print("\nSalvando CSV...")
 
-    salvar_csv(df)
-
-    print("\nSalvando SQLite...")
-
-    salvar_sqlite(df)
+    df.to_csv(
+        CSV_PATH,
+        index=False,
+        encoding="utf-8-sig",
+    )
 
     print(
-        "\nColeta finalizada com sucesso."
+        f"\nArquivo salvo em: {CSV_PATH}"
+    )
+
+    print(
+        "\nColeta ofensiva finalizada com sucesso."
     )
 
 

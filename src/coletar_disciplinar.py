@@ -1,22 +1,30 @@
 import time
+from pathlib import Path
 
 import pandas as pd
 
-from config import (
+from src.config import (
     TEMPORADAS,
     DISCIPLINARY_URL,
     HEADERS,
-    INTERVALO
+    INTERVALO,
 )
 
-from scraper import (
+from src.scraper import (
     obter_html,
-    descobrir_paginas
+    descobrir_paginas,
 )
 
-from parser_disciplinar import (
-    extrair_cartoes
+from src.parser_disciplinar import (
+    extrair_cartoes,
 )
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_DIR = BASE_DIR / "data"
+
+CSV_PATH = DATA_DIR / "disciplinar.csv"
 
 
 def main():
@@ -24,11 +32,13 @@ def main():
     registros = []
 
     print("\n" + "=" * 80)
+    print("COLETA DISCIPLINAR")
+    print("=" * 80)
 
     for temporada in TEMPORADAS:
 
         print(
-            f"Coletando temporada {temporada}"
+            f"\nColetando temporada {temporada}"
         )
 
         url_base = DISCIPLINARY_URL.format(
@@ -37,7 +47,7 @@ def main():
 
         total_paginas = descobrir_paginas(
             url_base,
-            HEADERS
+            HEADERS,
         )
 
         print(
@@ -48,7 +58,7 @@ def main():
 
         for pagina in range(
             1,
-            total_paginas + 1
+            total_paginas + 1,
         ):
 
             if pagina == 1:
@@ -63,13 +73,13 @@ def main():
 
             html = obter_html(
                 url,
-                HEADERS
+                HEADERS,
             )
 
             registros_pagina = extrair_cartoes(
                 html,
                 temporada,
-                url
+                url,
             )
 
             registros.extend(
@@ -99,7 +109,7 @@ def main():
     if not registros:
 
         print(
-            "Nenhum registro coletado."
+            "\nNenhum registro coletado."
         )
 
         return
@@ -110,28 +120,32 @@ def main():
 
     print("\nResumo:")
 
-    print(df.info())
+    df.info()
 
     print("\nPrimeiras linhas:")
 
-    print(df.head())
-
-    arquivo = (
-        "../data/cartoes_debug.csv"
+    print(
+        df.head()
     )
+
+    DATA_DIR.mkdir(
+        exist_ok=True
+    )
+
+    print("\nSalvando CSV...")
 
     df.to_csv(
-        arquivo,
+        CSV_PATH,
         index=False,
-        encoding="utf-8-sig"
+        encoding="utf-8-sig",
     )
 
     print(
-        f"\nArquivo salvo: {arquivo}"
+        f"\nArquivo salvo em: {CSV_PATH}"
     )
 
     print(
-        "\nColeta disciplinar finalizada."
+        "\nColeta disciplinar finalizada com sucesso."
     )
 
 
