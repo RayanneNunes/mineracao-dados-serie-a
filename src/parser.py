@@ -7,8 +7,6 @@ def extrair_jogadores(html, temporada, url):
 
     tabela = soup.find("table", class_="items")
 
-    print(f"Tabela encontrada: {tabela is not None}")
-
     if tabela is None:
         return []
 
@@ -16,14 +14,11 @@ def extrair_jogadores(html, temporada, url):
 
     linhas = tabela.find_all("tr")
 
-    print(f"Total de linhas encontradas: {len(linhas)}")
-
     for linha in linhas:
 
         colunas = linha.find_all("td")
 
-        # Ignora cabeçalho ou linhas vazias
-        if len(colunas) < 10:
+        if len(colunas) < 14:
             continue
 
         try:
@@ -33,29 +28,64 @@ def extrair_jogadores(html, temporada, url):
                 for td in colunas
             ]
 
-            # DEBUG
-            print(f"Qtd colunas: {len(dados)}")
+            # -------------------------------
+            # Clube
+            # -------------------------------
 
-            if len(dados) >= 14:
+            clube = ""
 
-                registro = {
-                    "jogador": dados[3] if len(dados) > 3 else "",
-                    "posicao": dados[4] if len(dados) > 4 else "",
-                    "idade": dados[8] if len(dados) > 8 else "",
-                    "jogos": dados[9] if len(dados) > 9 else "",
-                    "substituicoes_entrada": dados[10] if len(dados) > 10 else "",
-                    "substituicoes_saida": dados[11] if len(dados) > 11 else "",
-                    "gols": dados[12] if len(dados) > 12 else "",
-                    "assistencias": dados[13] if len(dados) > 13 else "",
-                    "temporada": temporada,
-                    "url_origem": url
-                }
+            clube_img = colunas[5].find("img")
 
-                registros.append(registro)
+            if clube_img:
+
+                clube = (
+                    clube_img.get("title")
+                    or clube_img.get("alt")
+                    or ""
+                )
+
+            # -------------------------------
+            # Nacionalidade
+            # -------------------------------
+
+            nacionalidade = ""
+
+            nacao_img = colunas[6].find("img")
+
+            if nacao_img:
+
+                nacionalidade = (
+                    nacao_img.get("title")
+                    or nacao_img.get("alt")
+                    or ""
+                )
+
+            # -------------------------------
+            # Registro
+            # -------------------------------
+
+            registro = {
+                "jogador": dados[3],
+                "posicao": dados[4],
+                "clube": clube,
+                "nacionalidade": nacionalidade,
+                "jogos": dados[7],
+                "idade": dados[8],
+                "substituicoes_entrada": dados[9],
+                "substituicoes_saida": dados[10],
+                "gols": dados[11],
+                "assistencias": dados[12],
+                "participacao_gols": dados[13],
+                "temporada": temporada,
+                "url_origem": url
+            }
+
+            registros.append(registro)
 
         except Exception as erro:
-            print(f"Erro: {erro}")
 
-    print(f"Registros extraídos: {len(registros)}")
+            print(
+                f"Erro ao processar registro: {erro}"
+            )
 
     return registros

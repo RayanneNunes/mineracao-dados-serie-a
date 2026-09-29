@@ -17,6 +17,9 @@ from database import salvar_sqlite
 
 def main():
 
+    print("\n" + "=" * 80)
+
+
     registros = []
 
     for temporada in TEMPORADAS:
@@ -59,8 +62,10 @@ def main():
     print("\nPrimeiras linhas:")
     print(df.head())
 
+    print("\nSalvando CSV...")
     salvar_csv(df)
 
+    print("\nSalvando SQLite...")
     salvar_sqlite(df)
 
     print("\nColeta finalizada com sucesso.")
