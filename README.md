@@ -311,28 +311,16 @@ Base final:
 
 ---
 
-## Próximas Etapas
-
-- Análise das perguntas de pesquisa
-- Aplicação de técnicas de mineração de dados
-- Construção do dashboard final da disciplina
-
----
-
 ## Autores
 
 ### Rayanne Nunes
 
 GitHub:
 
-```text
 [https://github.com/RayanneNunes](https://github.com/RayanneNunes)
-```
 
 ### João Paulo Mussarelli Carossine
 
 GitHub:
 
-```text
 [https://github.com/joaopcarossine](https://github.com/joaopcarossine)
-```
