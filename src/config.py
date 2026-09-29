@@ -20,4 +20,12 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9"
 }
 
+DISCIPLINARY_URL = (
+    "https://www.transfermarkt.com/"
+    "campeonato-brasileiro-serie-a/"
+    "suenderkartei/"
+    "wettbewerb/BRA1/"
+    "saison_id/{temporada}/plus/1"
+)
+
 INTERVALO = 5
