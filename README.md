@@ -24,7 +24,7 @@ Os dados coletados serão utilizados nas etapas de ETL, preparação dos dados e
 
 ## Fonte dos Dados
 
-- Site: Transfermarkt
+- Site: [Transfermarkt](https://www.transfermarkt.com)
 - Competição: Campeonato Brasileiro Série A
 - Temporadas analisadas:
   - 2023
