@@ -28,41 +28,29 @@ def extrair_jogadores(html, temporada, url):
                 for td in colunas
             ]
 
-            # -------------------------------
             # Clube
-            # -------------------------------
-
             clube = ""
 
             clube_img = colunas[5].find("img")
 
             if clube_img:
-
                 clube = (
                     clube_img.get("title")
                     or clube_img.get("alt")
                     or ""
                 )
 
-            # -------------------------------
             # Nacionalidade
-            # -------------------------------
-
             nacionalidade = ""
 
             nacao_img = colunas[6].find("img")
 
             if nacao_img:
-
                 nacionalidade = (
                     nacao_img.get("title")
                     or nacao_img.get("alt")
                     or ""
                 )
-
-            # -------------------------------
-            # Registro
-            # -------------------------------
 
             registro = {
                 "jogador": dados[3],
